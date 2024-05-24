@@ -1,13 +1,9 @@
 import { FC, useState } from "react";
 import { IBooleanQuestion } from "../models";
 import Button from "../../../ui/Button";
+import store from "../store/componentsStore";
 
-const BooleanQuestion: FC<IBooleanQuestion> = ({
-  id,
-  title,
-  onRemove,
-  onEdit,
-}) => {
+const BooleanQuestion: FC<IBooleanQuestion> = ({ id, title }) => {
   const [question, setQuestion] = useState(title);
   const [edit, setEdit] = useState(false);
 
@@ -26,7 +22,7 @@ const BooleanQuestion: FC<IBooleanQuestion> = ({
               title="Зберегти"
               color="green"
               onClick={() => {
-                onEdit(id, question);
+                store.editQuestion(id, question);
                 setEdit(!edit);
               }}
             />
@@ -42,7 +38,7 @@ const BooleanQuestion: FC<IBooleanQuestion> = ({
             <Button
               title="Видалити"
               color="purple"
-              onClick={() => onRemove(id)}
+              onClick={() => store.removeQustion(id)}
             />
           </>
         )}

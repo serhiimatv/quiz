@@ -1,51 +1,11 @@
 import { FC, useState } from "react";
+import { observer } from "mobx-react-lite";
 import Button from "../../../ui/Button";
-import BooleanQuestion from "./BooleanQuestion";
-import { QuestionComponents } from "../models";
-import { v4 } from "uuid";
+import { QuestionType } from "../models/questiontypecomponents";
+import store from "../store/componentsStore";
 
-const questionType = {
-  boolean: BooleanQuestion,
-  multiple: BooleanQuestion,
-  single: BooleanQuestion,
-};
-
-const AddTopick: FC = () => {
+const AddTopick: FC = observer(() => {
   const [question, setQuestion] = useState("");
-
-  const [componentsList, setComponentsList] = useState<QuestionComponents[]>(
-    []
-  );
-
-  const addQustion = (type: "single" | "multiple" | "boolean") => {
-    if (question.trim() !== "") {
-      setComponentsList([
-        ...componentsList,
-        {
-          id: v4(),
-          title: question,
-          type: type,
-          Component: questionType[type],
-        },
-      ]);
-      setQuestion("");
-    }
-  };
-
-  const removeQustionHandler = (id: string) => {
-    setComponentsList(componentsList.filter((item) => item.id !== id));
-  };
-
-  const editQuestionHandler = (id: string, title: string) => {
-    setComponentsList(
-      componentsList.map((item) => {
-        if (item.id === id) {
-          item.title = title;
-        }
-        return item;
-      })
-    );
-  };
 
   return (
     <>
@@ -61,7 +21,10 @@ const AddTopick: FC = () => {
           title="Додати запитання правда/брехня"
           color="default"
           className="h-auto m-0"
-          onClick={() => addQustion("boolean")}
+          onClick={() => {
+            store.addQustion(question, "boolean");
+            setQuestion("");
+          }}
         ></Button>
         <Button
           title="Додати запитання з одною правильною відповіддю"
@@ -75,18 +38,14 @@ const AddTopick: FC = () => {
         ></Button>
       </div>
       <div>
-        {componentsList.map((Item) => (
-          <Item.Component
-            key={Item.id}
-            id={Item.id}
-            title={Item.title}
-            onRemove={removeQustionHandler}
-            onEdit={editQuestionHandler}
-          />
-        ))}
+        {store.componentsList.map((item) => {
+          const Component = QuestionType[item.type];
+
+          return <Component key={item.id} id={item.id} title={item.title} />;
+        })}
       </div>
     </>
   );
-};
+});
 
 export default AddTopick;
