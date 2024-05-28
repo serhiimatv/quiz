@@ -9,7 +9,7 @@ const BooleanQuestion: FC<IBooleanQuestion> = ({ id, title }) => {
 
   return (
     <>
-      <div className="mt-2 flex gap-2">
+      <div className="mt-2 flex gap-2 p-1 border-2 rounded-[5px] w-[50%] ">
         {edit ? (
           <>
             <input
@@ -19,6 +19,7 @@ const BooleanQuestion: FC<IBooleanQuestion> = ({ id, title }) => {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <Button
+              className="ml-auto"
               title="Зберегти"
               color="green"
               onClick={() => {
@@ -31,6 +32,7 @@ const BooleanQuestion: FC<IBooleanQuestion> = ({ id, title }) => {
           <>
             <h2 className="font-bold text-3xl underline">{title}</h2>
             <Button
+              className="ml-auto"
               title="Редагувати"
               color="green"
               onClick={() => setEdit(!edit)}

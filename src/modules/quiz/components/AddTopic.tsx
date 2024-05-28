@@ -41,7 +41,7 @@ const AddTopick: FC = observer(() => {
         {store.componentsList.map((item) => {
           const Component = QuestionType[item.type];
 
-          return <Component key={item.id} id={item.id} title={item.title} />;
+          return <Component key={item.id} id={item.id} title={item.question} />;
         })}
       </div>
     </>

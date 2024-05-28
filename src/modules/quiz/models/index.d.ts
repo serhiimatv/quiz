@@ -3,10 +3,11 @@ import { FC } from "react";
 export type Questiontype = "single" | "multiple" | "boolean";
 
 export type Question = {
+  id: string;
   question: string;
-  choices: string[];
   type: Questiontype;
-  correctAnswers: string[];
+  choices?: string[];
+  correctAnswers?: string[];
   score?: number;
 };
 

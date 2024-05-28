@@ -1,9 +1,9 @@
 import { observable, action, makeObservable } from "mobx";
-import { QuestionComponents, Questiontype } from "../models";
+import { Question, Questiontype } from "../models";
 import { v4 } from "uuid";
 
 class ComponentsStore {
-  componentsList: QuestionComponents[] = [];
+  componentsList: Question[] = [];
   constructor() {
     makeObservable(this, {
       componentsList: observable,
@@ -17,7 +17,7 @@ class ComponentsStore {
     if (question.trim() !== "") {
       this.componentsList.push({
         id: v4(),
-        title: question,
+        question: question,
         type: type,
       });
     }
@@ -30,7 +30,7 @@ class ComponentsStore {
   editQuestion = (id: string, title: string) => {
     const question = this.componentsList.find((item) => item.id === id);
     if (question) {
-      question.title = title;
+      question.question = title;
     }
   };
 }
