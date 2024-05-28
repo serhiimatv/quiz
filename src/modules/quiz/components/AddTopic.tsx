@@ -30,6 +30,10 @@ const AddTopick: FC = observer(() => {
           title="Додати запитання з одною правильною відповіддю"
           color="default"
           className="h-auto m-0"
+          onClick={() => {
+            store.addQustion(question, "single");
+            setQuestion("");
+          }}
         ></Button>
         <Button
           title="Додати запитання з дукількома правильними відповіддями"
@@ -41,7 +45,16 @@ const AddTopick: FC = observer(() => {
         {store.componentsList.map((item) => {
           const Component = QuestionType[item.type];
 
-          return <Component key={item.id} id={item.id} title={item.question} />;
+          return (
+            <Component
+              key={item.id}
+              id={item.id}
+              title={item.question}
+              choices={item.choices}
+              correctAnswers={item.correctAnswers}
+              type={item.type}
+            />
+          );
         })}
       </div>
     </>

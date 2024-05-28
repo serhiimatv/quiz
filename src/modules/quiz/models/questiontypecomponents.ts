@@ -1,7 +1,7 @@
-import BooleanQuestion from "../components/BooleanQuestion";
+import Question from "../components/Question";
 
 export const QuestionType = {
-  boolean: BooleanQuestion,
-  multiple: BooleanQuestion,
-  single: BooleanQuestion,
+  boolean: Question,
+  multiple: Question,
+  single: Question,
 };

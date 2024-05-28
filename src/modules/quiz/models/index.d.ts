@@ -6,8 +6,8 @@ export type Question = {
   id: string;
   question: string;
   type: Questiontype;
-  choices?: string[];
-  correctAnswers?: string[];
+  choices: string[];
+  correctAnswers: string[];
   score?: number;
 };
 
@@ -20,9 +20,12 @@ export type Topic = {
   questions: Question[];
 };
 
-export type IBooleanQuestion = {
+export type IQuestion = {
   id: string;
   title: string;
+  choices: string[];
+  correctAnswers: string[];
+  type: Questiontype;
 };
 
 export type QuestionComponents = {
