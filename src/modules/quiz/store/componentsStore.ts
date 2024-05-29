@@ -1,5 +1,5 @@
 import { observable, action, makeObservable } from "mobx";
-import { Question, Questiontype } from "../models";
+import { Question, QuestionType } from "../models";
 import { v4 } from "uuid";
 
 class ComponentsStore {
@@ -7,16 +7,16 @@ class ComponentsStore {
   constructor() {
     makeObservable(this, {
       componentsList: observable,
-      addQustion: action,
+      addQuestion: action,
       changeAnswer: action,
       addAnswer: action,
       removeAnswer: action,
-      removeQustion: action,
+      removeQuestion: action,
       editQuestion: action,
     });
   }
 
-  addQustion = (question: string, type: Questiontype) => {
+  addQuestion = (question: string, type: QuestionType) => {
     if (question.trim() !== "" && type === "boolean") {
       this.componentsList.push({
         id: v4(),
@@ -37,7 +37,7 @@ class ComponentsStore {
     }
   };
 
-  removeQustion = (id: string) => {
+  removeQuestion = (id: string) => {
     this.componentsList = this.componentsList.filter((item) => item.id !== id);
   };
 

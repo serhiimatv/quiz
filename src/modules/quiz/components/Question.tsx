@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { IQuestion } from "../models";
 import Button from "../../../ui/Button";
 import store from "../store/componentsStore";
+import QuestionAnswer from "./QuestionAnswer";
 
 const Question: FC<IQuestion> = ({
   id,
@@ -48,7 +49,7 @@ const Question: FC<IQuestion> = ({
               <Button
                 title="Видалити"
                 color="purple"
-                onClick={() => store.removeQustion(id)}
+                onClick={() => store.removeQuestion(id)}
               />
             </>
           )}
@@ -72,39 +73,12 @@ const Question: FC<IQuestion> = ({
             />
           </div>
         )}
-        <fieldset className="mt-3">
-          Виберіть яка відповідь буде правильною:
-          {choices.map((item) => (
-            <div key={item} className="mt-2">
-              <input
-                type="radio"
-                id={item}
-                name="question"
-                checked={item === correctAnswers[0] ? true : false}
-                onChange={(e) => {
-                  store.changeAnswer(id, e.target.id);
-                }}
-              />
-              <label className="ml-2" htmlFor={item}>
-                {item}
-              </label>
-              <Button
-                data-answer={item}
-                title="Видалити"
-                color="purple"
-                className="ml-4"
-                onClick={(e) => {
-                  const answer = (e.target as Element).getAttribute(
-                    "data-answer"
-                  );
-                  if (answer) {
-                    store.removeAnswer(id, answer);
-                  }
-                }}
-              />
-            </div>
-          ))}
-        </fieldset>
+        <QuestionAnswer
+          id={id}
+          choices={choices}
+          correctAnswers={correctAnswers}
+          type={type}
+        />
       </div>
     </>
   );

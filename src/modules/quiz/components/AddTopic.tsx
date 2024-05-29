@@ -4,7 +4,7 @@ import Button from "../../../ui/Button";
 import { QuestionType } from "../models/questiontypecomponents";
 import store from "../store/componentsStore";
 
-const AddTopick: FC = observer(() => {
+const AddTopic: FC = observer(() => {
   const [question, setQuestion] = useState("");
 
   return (
@@ -22,7 +22,7 @@ const AddTopick: FC = observer(() => {
           color="default"
           className="h-auto m-0"
           onClick={() => {
-            store.addQustion(question, "boolean");
+            store.addQuestion(question, "boolean");
             setQuestion("");
           }}
         ></Button>
@@ -31,7 +31,7 @@ const AddTopick: FC = observer(() => {
           color="default"
           className="h-auto m-0"
           onClick={() => {
-            store.addQustion(question, "single");
+            store.addQuestion(question, "single");
             setQuestion("");
           }}
         ></Button>
@@ -61,4 +61,4 @@ const AddTopick: FC = observer(() => {
   );
 });
 
-export default AddTopick;
+export default AddTopic;
