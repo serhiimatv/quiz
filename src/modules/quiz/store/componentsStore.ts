@@ -3,22 +3,25 @@ import { Question, QuestionType } from "../models";
 import { v4 } from "uuid";
 
 class ComponentsStore {
-  componentsList: Question[] = [];
+  questionList: Question[] = [];
   constructor() {
     makeObservable(this, {
-      componentsList: observable,
+      questionList: observable,
       addQuestion: action,
       changeAnswer: action,
       addAnswer: action,
+      addMultipleAnswer: action,
       removeAnswer: action,
       removeQuestion: action,
       editQuestion: action,
+      erseQuestion: action,
     });
   }
 
+  // подумати над рефакторингом
   addQuestion = (question: string, type: QuestionType) => {
     if (question.trim() !== "" && type === "boolean") {
-      this.componentsList.push({
+      this.questionList.push({
         id: v4(),
         question: question,
         type: type,
@@ -26,8 +29,8 @@ class ComponentsStore {
         correctAnswers: ["Правда"],
       });
     }
-    if (question.trim() !== "" && type === "single") {
-      this.componentsList.push({
+    if ((question.trim() !== "" && type === "single") || type === "multiple") {
+      this.questionList.push({
         id: v4(),
         question: question,
         type: type,
@@ -38,25 +41,25 @@ class ComponentsStore {
   };
 
   removeQuestion = (id: string) => {
-    this.componentsList = this.componentsList.filter((item) => item.id !== id);
+    this.questionList = this.questionList.filter((item) => item.id !== id);
   };
 
   editQuestion = (id: string, title: string) => {
-    const question = this.componentsList.find((item) => item.id === id);
+    const question = this.questionList.find((item) => item.id === id);
     if (question) {
       question.question = title;
     }
   };
 
   addAnswer = (id: string, answer: string) => {
-    const question = this.componentsList.find((item) => item.id === id);
+    const question = this.questionList.find((item) => item.id === id);
     if (question) {
       question.choices.push(answer);
     }
   };
 
   removeAnswer = (id: string, answer: string) => {
-    const question = this.componentsList.find((item) => item.id === id);
+    const question = this.questionList.find((item) => item.id === id);
     if (question) {
       question.choices = question.choices.filter((item) => item !== answer);
 
@@ -71,11 +74,29 @@ class ComponentsStore {
   };
 
   changeAnswer = (id: string, answer: string) => {
-    const question = this.componentsList.find((item) => item.id === id);
+    const question = this.questionList.find((item) => item.id === id);
 
     if (question) {
       question.correctAnswers = [answer];
     }
+  };
+
+  addMultipleAnswer = (id: string, answer: string) => {
+    const question = this.questionList.find((item) => item.id === id);
+
+    if (question) {
+      if (question.correctAnswers.find((item) => item === answer)) {
+        question.correctAnswers = question.correctAnswers.filter(
+          (item) => item !== answer
+        );
+      } else {
+        question.correctAnswers.push(answer);
+      }
+    }
+  };
+
+  erseQuestion = () => {
+    this.questionList = [];
   };
 }
 
