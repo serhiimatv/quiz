@@ -3,41 +3,55 @@ import { observer } from "mobx-react-lite";
 import Button from "../../../ui/Button";
 import store from "../store/componentsStore";
 import Question from "./Question";
-import { QuestionType, Topic } from "../models";
+import { QuestionType, type Topic } from "../models";
 
-const AddTopic: FC = observer(() => {
+const Topic: FC = observer(() => {
   const [topicName, setTopicName] = useState("");
   const [question, setQuestion] = useState("");
+  const [error, setError] = useState({ topicName: false, question: false });
 
   const addQuestionHandler = (e: SyntheticEvent<HTMLButtonElement>) => {
+    if (question.trim() === "") {
+      setError({ ...error, question: true });
+      return;
+    }
     const element = e.target as Element;
     store.addQuestion(question, element.id as QuestionType);
+    setError({ ...error, question: false });
     setQuestion("");
   };
 
   const saveTopic = () => {
     const quiz = localStorage.getItem("quiz");
 
-    if (quiz) {
-      const topics: Topic[] = JSON.parse(quiz);
-      topics.push({
-        topic: topicName,
-        questions: store.questionList,
-      });
-      localStorage.setItem("quiz", JSON.stringify(topics));
-    } else {
-      localStorage.setItem(
-        "quiz",
-        JSON.stringify([
-          {
-            topic: topicName,
-            questions: store.questionList,
-          },
-        ])
-      );
+    if (topicName.trim() === "" || store.questionList.length === 0) {
+      setError({ ...error, topicName: true });
+      return;
+    }
+
+    switch (quiz) {
+      case null:
+        localStorage.setItem(
+          "quiz",
+          JSON.stringify([
+            {
+              topic: topicName,
+              questions: store.questionList,
+            },
+          ])
+        );
+        break;
+      default:
+        const topics: Topic[] = JSON.parse(quiz);
+        topics.push({
+          topic: topicName,
+          questions: store.questionList,
+        });
     }
 
     store.erseQuestion();
+    setTopicName("");
+    setError({ ...error, topicName: false });
   };
 
   return (
@@ -49,6 +63,7 @@ const AddTopic: FC = observer(() => {
           placeholder="Введіть назву вікторини"
           value={topicName}
           onChange={(e) => setTopicName(e.target.value)}
+          required
         />
         <Button
           title="Зберегти вікторину"
@@ -57,6 +72,11 @@ const AddTopic: FC = observer(() => {
           onClick={saveTopic}
         />
       </div>
+      {error.topicName && (
+        <div className="text-red-600">
+          Введіть назву вікторини та додайте запитання
+        </div>
+      )}
       <div className="h-auto flex gap-1 mt-3">
         <input
           type="text"
@@ -87,6 +107,7 @@ const AddTopic: FC = observer(() => {
           onClick={addQuestionHandler}
         ></Button>
       </div>
+      {error.question && <div className="text-red-600">Введіть запитання</div>}
       <div>
         {store.questionList.map((item) => (
           <Question
@@ -103,4 +124,4 @@ const AddTopic: FC = observer(() => {
   );
 });
 
-export default AddTopic;
+export default Topic;

@@ -29,7 +29,10 @@ class ComponentsStore {
         correctAnswers: ["Правда"],
       });
     }
-    if ((question.trim() !== "" && type === "single") || type === "multiple") {
+    if (
+      (question.trim() !== "" && type === "single") ||
+      (question.trim() !== "" && type === "multiple")
+    ) {
       this.questionList.push({
         id: v4(),
         question: question,

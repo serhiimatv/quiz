@@ -14,6 +14,21 @@ const Question: FC<IQuestion> = ({
   const [question, setQuestion] = useState(title);
   const [answer, setAnswer] = useState("");
   const [edit, setEdit] = useState(false);
+  const [error, setError] = useState(false);
+
+  const addAnswerHandler = () => {
+    const question = store.questionList.find((item) => item.id === id);
+    if (question) {
+      const exist = question.choices.find((item) => answer.trim() === item);
+      if (!!exist) {
+        setError(true);
+        return;
+      }
+    }
+    store.addAnswer(id, answer.trim());
+    setError(false);
+    setAnswer("");
+  };
 
   return (
     <>
@@ -55,23 +70,25 @@ const Question: FC<IQuestion> = ({
           )}
         </div>
         {type !== "boolean" && (
-          <div className="mt-2 h-auto flex gap-1">
-            <input
-              type="text"
-              placeholder="Введіть текст відповіді"
-              className="border-2 rounded-[10px] pl-1"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-            />
-            <Button
-              title={"Додати відповідь"}
-              color="alternative"
-              onClick={() => {
-                store.addAnswer(id, answer.trim());
-                setAnswer("");
-              }}
-            />
-          </div>
+          <>
+            <div className="mt-2 h-auto flex gap-1">
+              <input
+                type="text"
+                placeholder="Введіть текст відповіді"
+                className="border-2 rounded-[10px] pl-1"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <Button
+                title={"Додати відповідь"}
+                color="alternative"
+                onClick={addAnswerHandler}
+              />
+            </div>
+            {error && (
+              <div className="text-red-600">Така відповідь вже існує</div>
+            )}
+          </>
         )}
         <QuestionAnswer
           id={id}
