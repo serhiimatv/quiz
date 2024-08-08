@@ -47,6 +47,7 @@ const Topic: FC = observer(() => {
           topic: topicName,
           questions: store.questionList,
         });
+        localStorage.setItem("quiz", JSON.stringify(topics));
     }
 
     store.erseQuestion();
@@ -56,7 +57,7 @@ const Topic: FC = observer(() => {
 
   return (
     <>
-      <div className="h-10">
+      <div className="h-10 mt-4">
         <input
           type="text"
           className="border-2 rounded-[10px] pl-1 h-full w-64"

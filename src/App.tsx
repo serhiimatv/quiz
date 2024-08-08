@@ -1,11 +1,13 @@
-import Topic from "./modules/quiz/components/Topic";
+import { BrowserRouter } from "react-router-dom";
+import RootQuiz from "./modules/quiz";
 
 function App() {
   return (
     <>
       <div className="container mx-auto pb-9">
-        <h1 className="mb-6 text-3xl font-bold">Вікторина</h1>
-        <Topic />
+        <BrowserRouter>
+          <RootQuiz />
+        </BrowserRouter>
       </div>
     </>
   );
