@@ -4,11 +4,17 @@ import Button from "../../../ui/Button";
 import store from "../store/componentsStore";
 import Question from "./Question";
 import { QuestionType, type Topic } from "../models";
+import { useNavigate } from "react-router-dom";
 
 const Topic: FC = observer(() => {
+  const navigate = useNavigate();
   const [topicName, setTopicName] = useState("");
   const [question, setQuestion] = useState("");
-  const [error, setError] = useState({ topicName: false, question: false });
+  const [error, setError] = useState({
+    topicName: false,
+    question: false,
+    topicNameRepeat: false,
+  });
 
   const addQuestionHandler = (e: SyntheticEvent<HTMLButtonElement>) => {
     if (question.trim() === "") {
@@ -27,6 +33,17 @@ const Topic: FC = observer(() => {
     if (topicName.trim() === "" || store.questionList.length === 0) {
       setError({ ...error, topicName: true });
       return;
+    }
+
+    if (quiz) {
+      const quizParse: Topic[] = JSON.parse(quiz);
+      const topicNameRepeat = quizParse.find(
+        (item) => item.topic === topicName.trim()
+      );
+      if (topicNameRepeat !== undefined) {
+        setError({ ...error, topicNameRepeat: true });
+        return;
+      }
     }
 
     switch (quiz) {
@@ -52,7 +69,8 @@ const Topic: FC = observer(() => {
 
     store.erseQuestion();
     setTopicName("");
-    setError({ ...error, topicName: false });
+    setError({ ...error, topicName: false, topicNameRepeat: false });
+    navigate("/");
   };
 
   return (
@@ -77,6 +95,9 @@ const Topic: FC = observer(() => {
         <div className="text-red-600">
           Введіть назву вікторини та додайте запитання
         </div>
+      )}
+      {error.topicNameRepeat && (
+        <div className="text-red-600">Вікторина с такою назвою вже існує</div>
       )}
       <div className="h-auto flex gap-1 mt-3">
         <input

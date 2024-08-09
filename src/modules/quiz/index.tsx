@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import QuizList from "./components/QuizList";
 import Topic from "./components/Topic";
+import Quiz from "./components/Quiz";
 
 const RootQuiz: FC = () => {
   return (
@@ -22,6 +23,7 @@ const RootQuiz: FC = () => {
       <Routes>
         <Route path="/" element={<QuizList />} />
         <Route path="/create" element={<Topic />} />
+        <Route path="/quiz/:id" element={<Quiz />} />
       </Routes>
     </>
   );
