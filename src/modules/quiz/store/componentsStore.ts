@@ -1,5 +1,5 @@
 import { observable, action, makeObservable } from "mobx";
-import { Question, QuestionType } from "../models";
+import { type Question, type QuestionType } from "../models";
 import { v4 } from "uuid";
 
 class ComponentsStore {
@@ -15,6 +15,7 @@ class ComponentsStore {
       removeQuestion: action,
       editQuestion: action,
       erseQuestion: action,
+      addQuestionList: action,
     });
   }
 
@@ -100,6 +101,10 @@ class ComponentsStore {
 
   erseQuestion = () => {
     this.questionList = [];
+  };
+
+  addQuestionList = (list: Question[]) => {
+    this.questionList = list;
   };
 }
 

@@ -1,13 +1,16 @@
-import { FC, SyntheticEvent, useState } from "react";
+import { FC, SyntheticEvent, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import Button from "../../../ui/Button";
 import store from "../store/componentsStore";
 import Question from "./Question";
 import { QuestionType, type Topic } from "../models";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Topic: FC = observer(() => {
   const navigate = useNavigate();
+
+  const [query] = useSearchParams();
+
   const [topicName, setTopicName] = useState("");
   const [question, setQuestion] = useState("");
   const [error, setError] = useState({
@@ -40,7 +43,7 @@ const Topic: FC = observer(() => {
       const topicNameRepeat = quizParse.find(
         (item) => item.topic === topicName.trim()
       );
-      if (topicNameRepeat !== undefined) {
+      if (topicNameRepeat !== undefined && !query.get("topic")) {
         setError({ ...error, topicNameRepeat: true });
         return;
       }
@@ -60,6 +63,15 @@ const Topic: FC = observer(() => {
         break;
       default:
         const topics: Topic[] = JSON.parse(quiz);
+        if (query.get("topic")) {
+          topics.forEach((item) => {
+            if (item.topic === query.get("topic")) {
+              item.questions = store.questionList;
+            }
+          });
+          localStorage.setItem("quiz", JSON.stringify(topics));
+          break;
+        }
         topics.push({
           topic: topicName,
           questions: store.questionList,
@@ -67,11 +79,28 @@ const Topic: FC = observer(() => {
         localStorage.setItem("quiz", JSON.stringify(topics));
     }
 
-    store.erseQuestion();
     setTopicName("");
     setError({ ...error, topicName: false, topicNameRepeat: false });
     navigate("/");
   };
+
+  useEffect(() => {
+    const quiz = localStorage.getItem("quiz");
+    const topicName = query.get("topic");
+    if (topicName && quiz) {
+      const topics: Topic[] = JSON.parse(quiz);
+      const topic = topics.find((item) => item.topic === topicName);
+
+      if (topic) {
+        store.addQuestionList(topic.questions);
+        setTopicName(topic.topic);
+      }
+    }
+
+    return () => {
+      store.erseQuestion();
+    };
+  }, []);
 
   return (
     <>

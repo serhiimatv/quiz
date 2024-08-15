@@ -1,8 +1,5 @@
 import { FC } from "react";
-import { Link, Route, Routes } from "react-router-dom";
-import QuizList from "./components/QuizList";
-import Topic from "./components/Topic";
-import Quiz from "./components/Quiz";
+import { Link, Outlet } from "react-router-dom";
 
 const RootQuiz: FC = () => {
   return (
@@ -20,11 +17,7 @@ const RootQuiz: FC = () => {
           </ul>
         </nav>
       </div>
-      <Routes>
-        <Route path="/" element={<QuizList />} />
-        <Route path="/create" element={<Topic />} />
-        <Route path="/quiz/:id" element={<Quiz />} />
-      </Routes>
+      <Outlet />
     </>
   );
 };
